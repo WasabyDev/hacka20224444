@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Texto para Div</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #divContainer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: lightgray;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .novaDiv {
+            margin-top: 10px; /* Espaçamento entre as divs */
+            border-bottom: 1px solid #ccc; /* Bordar inferior para separar as divs */
+            padding-bottom: 10px; /* Espaçamento inferior para a borda */
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="textoInput" placeholder="Digite algo">
+    <button onclick="adicionarDiv()">Enviar</button>
+    <div id="divContainer"></div>
+
+    <script>
+        function adicionarDiv() {
+            var texto = $('#textoInput').val();
+            if (texto.trim() !== '') {
+                var novaDiv = $('<div>').addClass('novaDiv').text(texto);
+                $('#divContainer').append(novaDiv); // Adicionando a nova div abaixo da anterior
+                $('#textoInput').val(''); // Limpar o campo de texto
+                $('#divContainer').show(); // Mostrando a div centralizada
+            } else {
+                alert('Por favor, digite algo antes de enviar.');
+            }
+        }
+    </script>
+</body>
+</html>

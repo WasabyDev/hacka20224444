@@ -92,8 +92,9 @@ input::placeholder{
 }
 
 .cubinhos-wrapper{
-    width: 100px;
-    height: 100px;
+    padding: 5px;
+    width: 80px;
+    height: 80px;
     background-color: #871821;
     justify-content: center;
     align-items: center;
@@ -112,16 +113,6 @@ input::placeholder{
 
 
 
-.notificacao {
-  position: flex;
-  top: 50px; /* Ajuste conforme necessário */
-  left: 10px; /* Ajuste conforme necessário */
-  z-index: 999; /* Garante que fique acima de outros elementos */
-}
-
-.notificacao i {
-  font-size: 24px; /* Ajuste o tamanho do ícone conforme necessário */
-}
 
 
 

@@ -205,7 +205,17 @@ input::placeholder{
 }
 
 .menu-link:hover{
-    color: #871821);
+    color: #871821;
     transition: color .7s;
 }
 
+.map{
+    width: 100%;
+    height: 100px;
+}
+
+.quadradox{
+    width: 100px;
+    height: 100px;
+    background-color: aqua;
+}

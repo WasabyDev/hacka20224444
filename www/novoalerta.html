@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Texto para Div</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         #divContainer {
@@ -9,10 +11,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: lightgray;
             padding: 20px;
             border-radius: 5px;
             text-align: center;
+            visibility: hidden; /* Tornar invisível quando vazio */
         }
         .novaDiv {
             margin-top: 10px; /* Espaçamento entre as divs */
@@ -39,11 +41,41 @@
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="hamburger">
+            <div class="line" id="line1"></div>
+            <div class="line" id="line2"></div>
+            <div class="line" id="line3"></div>
+        </div>
+        
+        <aside class="sidebar">
+            <nav>
+                <ul class="menu">
+                    <li class="menu-item"><a href="index.html" class="menu-link">Inicio</a></li>
+                    <br>
+                    <li class="menu-item"><a href="clima.html" class="menu-link">Clima</a></li>
+                    <br>
+                    <li class="menu-item"><a href="alertas.html" class="menu-link">Alertas</a></li>
+                    <br>
+                    <li class="menu-item"><a href="mapa.html" class="menu-link">Mapa</a></li>
+                    <br>
+                    <li class="menu-item"><a href="#" class="menu-link">Quem somos</a></li>
+                </ul>
+            </nav>
+        </aside>
+    </div>
+
+    <br><br><br><br><br><br><br><br>
+
     <input type="text" id="textoInput" placeholder="Digite algo">
     <button onclick="adicionarDiv()">Enviar</button>
     <div id="divContainer"></div>
 
     <script>
+        document.querySelector(".hamburger").addEventListener("click", () => {
+            document.querySelector(".container").classList.toggle("show-menu");
+        });
+
         function adicionarDiv() {
             var texto = $('#textoInput').val();
             if (texto.trim() !== '') {
@@ -51,9 +83,9 @@
                 var novaDiv = $('<div>').addClass('novaDiv').text(texto);
                 var dataDiv = $('<span>').addClass('dataDiv').text(dataAtual);
                 novaDiv.append(dataDiv); // Adicionando o span com a data dentro da div
-                $('#divContainer').append(novaDiv); // Adicionando a nova div abaixo da anterior
+                $('#divContainer').prepend(novaDiv); // Adicionando a nova div acima das anteriores
                 $('#textoInput').val(''); // Limpar o campo de texto
-                $('#divContainer').show(); // Mostrando a div centralizada
+                $('#divContainer').css('visibility', 'visible'); // Mostrando a div centralizada
             } else {
                 alert('Por favor, digite algo antes de enviar.');
             }

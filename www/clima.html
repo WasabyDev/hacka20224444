@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="src/tempo.css">
+    <title>Weather Forecast</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            height: 50px;
+            background-color: #AC99F2;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        footer {
+            width: 100%;
+            height: 50px;
+            background-color: #AC99F2;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+
+        .menu-toggle {
+            cursor: pointer;
+            font-size: 20px;
+            margin-left: 96%;
+            color: #fff;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            text-align: center;
+        }
+
+        nav ul li {
+            margin-bottom: 10px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #ddd;
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            nav {
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+                width: 100%;
+                background-color: #AC99F2;
+                position: absolute;
+                top: 50px;
+                left: 0;
+                z-index: 1000;
+            }
+
+            nav.active {
+                display: flex;
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 70px auto 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #container {
+            background-color: #f0f8ff;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #bdbdbd;
+            border-radius: 10px;
+            padding: 4px 12px;
+        }
+
+        #search input {
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        #search input:focus-visible {
+            outline: none;
+        }
+
+        #search button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        #weather {
+            display: none;
+            margin-top: 20px;   
+        }
+
+        #weather.show {
+            display: block;
+        }
+
+        #weather #title {
+            text-align: center;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #372f3f;
+        }
+
+        #temp {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 20px;
+            background: linear-gradient(90deg, #5a7cdc, #606dde);
+            color: #fff;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        #temp_img {
+            filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+        }
+
+        #temp_value {
+            font-weight: bold;
+            font-size: 50px;
+            line-height: 55px;
+        }
+
+        #temp_description {
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        #other_infos {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        #other_infos .info {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            padding: 4px 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            gap: 10px;
+        }
+
+        #other_infos .info h2 {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        #other_infos .info i {
+            text-align: center;
+            font-size: 20px;
+            width: 20%;
+        }
+
+        #temp_max_icon {
+            color: #7f1d1d;
+        }
+
+        #temp_min_icon {
+            color: #0284c7;
+        }
+
+        #humidity_icon {
+            color: #0ea5e9;
+        }
+
+        #wind_icon {
+            color: #7c3aed;
+        }
+
+        #alert {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #alert img {
+            width: 200px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="menu-toggle">&#9776;</div>
+        <nav>
+            <ul>
+                <li><a href="home.html">Início</a></li>
+                <li><a href="alertasTempo.html">Alertas</a></li>
+                <li><a href="comunidade.html">Comunidade</a></li>
+                <li><a href="doacao.html">Doações</a></li>
+                <li><a href="perfil.html">Meu perfil</a></li>
+                  <li><a href="info.html">Info-Saúde</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <div id="container">
+            <form id="search">
+                <i class="fa-solid fa-location-dot"></i>
+                <input 
+                    type="search" 
+                    name="city_name" 
+                    id="city_name" 
+                    placeholder="Buscar cidade"
+                >
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+
+            <div id="weather">
+                <h1 id="title">Rolante, BR</h1>
+                <div id="infos">
+                    <div id="temp">
+                        <img id="temp_img" src="http://openweathermap.org/img/wn/04d@2x.png" alt="Weather Icon">
+                        <div>
+                            <p id="temp_value">32</p>
+                            <p id="temp_description">Ensolarado</p>
+                        </div>
+                    </div>
+                    <div id="other_infos">
+                        <div class="info">
+                            <i id="temp_max_icon" class="fa-solid fa-temperature-high"></i>
+                            <div>
+                                <h2>Temp. max</h2>
+                                <p id="temp_max">32 <sup>°C</sup></p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <i id="temp_min_icon" class="fa-solid fa-temperature-arrow-down"></i>
+                            <div>
+                                <h2>Temp. min</h2>
+                                <p id="temp_min">19 <sup>°C</sup></p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <i id="humidity_icon" class="fa-solid fa-droplet"></i>
+                            <div>
+                                <h2>Umidade</h2>
+                                <p id="humidity">32%</p>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <i id="wind_icon" class="fa-solid fa-wind"></i>
+                            <div>
+                                <h2>Vento</h2>
+                                <p id="wind">50 km/h</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="alert"></div>
+        </div>
+    </div>
+    <footer></footer>
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('nav');
+
+        menuToggle.addEventListener('click', function() {
+            nav.classList.toggle('active');
+        });
+
+        // Get user's geolocation
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                showAlert("Geolocalização não é suportada por este navegador.");
+            }
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            const apiKey = '33c5a29614ea3e8e036608a045fc46a3';
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=pt_br`;
+
+            fetchWeather(apiUrl);
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    showAlert("Usuário negou a solicitação de Geolocalização. Por favor, digite o nome de uma cidade para buscar o clima.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    showAlert("As informações de localização estão indisponíveis.");
+                    break;
+                case error.TIMEOUT:
+                    showAlert("A solicitação para obter a localização do usuário expirou.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    showAlert("Ocorreu um erro desconhecido.");
+                    break;
+            }
+        }
+
+        // Fetch weather data based on URL
+        async function fetchWeather(apiUrl) {
+            const results = await fetch(apiUrl);
+            const json = await results.json();
+
+            if (json.cod === 200) {
+                showInfo({
+                    city: json.name,
+                    country: json.sys.country,
+                    temp: json.main.temp,
+                    tempMax: json.main.temp_max,
+                    tempMin: json.main.temp_min,
+                    description: json.weather[0].description,
+                    tempIcon: json.weather[0].icon,
+                    windSpeed: json.wind.speed,
+                    humidity: json.main.humidity,
+                });
+
+                // Check weather condition and send push notification if necessary
+                if (!json.weather[0].description.toLowerCase().includes('chuva')) {
+                    sendPushNotification("Sem riscos");
+                }
+            } else {
+                document.querySelector("#weather").classList.remove('show');
+                showAlert(`
+                    Não foi possível localizar...
+
+                    <img src="src/images/404.svg"/>
+                `)
+            }
+        }
+
+        // Show weather info on the page
+        function showInfo(json){
+            showAlert('');
+
+            document.querySelector("#weather").classList.add('show');
+
+            document.querySelector('#title').innerHTML = `${json.city}, ${json.country}`;
+
+            document.querySelector('#temp_value').innerHTML = `${json.temp.toFixed(1).toString().replace('.', ',')} <sup>C°</sup>`;
+            document.querySelector('#temp_description').innerHTML = `${json.description}`;
+            document.querySelector('#temp_img').setAttribute('src', `https://openweathermap.org/img/wn/${json.tempIcon}@2x.png`)
+
+            document.querySelector('#temp_max').innerHTML = `${json.tempMax.toFixed(1).toString().replace('.', ',')} <sup>C°</sup>`;
+            document.queryselector('#temp_min').innerHTML = `${json.tempMin.toFixed(1).toString().replace('.', ',')} <sup>C°</sup>`;
+            document.querySelector('#humidity').innerHTML = `${json.humidity}%`;
+            document.querySelector('#wind').innerHTML = `${json.windSpeed.toFixed(1)} km/h`;
+        }
+
+        // Show alert message
+        function showAlert(msg) {
+            document.querySelector('#alert').innerHTML = msg;
+        }
+
+        // Send push notification
+        function sendPushNotification(message) {
+            // Here you would integrate with the Monaca Push Plugin or any other push service you use
+            // Example for Monaca:
+            monaca.notification.push({
+                title: "Previsão do Tempo",
+                text: message,
+                sound: "default"
+            });
+        }
+
+        // Initial call to get the location and weather
+        getLocation();
+
+        // Search functionality
+        document.querySelector('#search').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const cityName = document.querySelector('#city_name').value;
+
+            if (!cityName) {
+                document.querySelector("#weather").classList.remove('show');
+                showAlert('Você precisa digitar uma cidade...');
+                return;
+            }
+
+            const apiKey = '33c5a29614ea3e8e036608a045fc46a3';
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURI(cityName)}&appid=${apiKey}&units=metric&lang=pt_br`;
+
+            fetchWeather(apiUrl);
+        });
+    </script>
+</body>
+</html>
